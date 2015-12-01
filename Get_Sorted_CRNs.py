@@ -24,3 +24,32 @@ def Get_Crns():
 	
 	Sorted_Crns = sorted(CRNs.keys())
 	return Sorted_Crns, CRNs
+
+
+def is_Valid(value, CRN_Numbers):
+	start = 0
+	end = len(CRN_Numbers) - 1
+	middle = (end) / 2
+
+	while start <= end:
+		middle_value = CRN_Numbers[middle]
+		if middle_value > value:
+			end = middle - 1
+			middle = (start + end) / 2
+		elif middle_value < value:
+			start = middle + 1
+			middle = (start + end) / 2
+		else:
+			print "Value Found at index %d" %middle
+			return True
+	print  "Value not found"
+	return False
+
+CRNS, Crn_Dict = Get_Crns()
+print "23412" in CRNS
+#print is_Valid("23412", CRNS)
+
+
+
+
+
