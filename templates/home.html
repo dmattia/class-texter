@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+  
+{% block content %}
+
+<div class="row">
+	<form method="POST" class="col s12">
+		<div class="row">
+			<div class="input-field col s12">
+				<i class="material-icons prefix">dialpad</i>
+		    		<input id="crn" name="crn" type="text" pattern="[0-9]{5}" class="validate">
+		   		<label for="crn" data-error="A CRN must be 5 digits" data-success="Sweet!">CRN:</label>
+		    	</div>	
+			<div class="input-field col s12">
+				<i class="material-icons prefix">phone</i>
+				<input id="phone_number" name="phone_number" type="tel" pattern="[0-9]{10}" class="validate">
+				<label for="phone_number" data-error="Enter number as 0123456789" data-success="Sweet!">Telephone</label>
+			</div>
+			<button class="col s4 offset-s4 green lighten-2 btn waves-effect waves-light" type="submit" name="action">Submit
+				<i class="material-icons right">send</i>
+			</button>
+		</div>
+	</form>
+</div>
+
+{% endblock %}

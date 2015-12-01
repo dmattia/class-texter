@@ -1,10 +1,25 @@
-from flask import Flask
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods=['GET','POST'])
 def hello_world():
-    return 'Hello World!'
+	if request.method == 'POST':
+		crn = request.form['crn']
+		number = "+1" + request.form['phone_number']
+		# Add to database
+		return thank_you(number)
+	else:
+		return render_template('home.html')
+
+@app.route('/thanks/')
+def thank_you(number):
+	number = format_phone_number(number)
+	return render_template('thanks.html', number=number)
+
+def format_phone_number(number):
+	str_num = str(number)
+	return str_num[:2] + '(' + str_num[2:5] + ')' + str_num[5:8] + '-' + str_num[8:]
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+	app.run(debug=True, host='0.0.0.0', port=5000)
