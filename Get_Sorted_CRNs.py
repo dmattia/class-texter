@@ -40,14 +40,9 @@ def is_Valid(value, CRN_Numbers):
 			start = middle + 1
 			middle = (start + end) / 2
 		else:
-			print "Value Found at index %d" %middle
 			return True
-	print  "Value not found"
 	return False
 
-CRNS, Crn_Dict = Get_Crns()
-print "23412" in CRNS
-#print is_Valid("23412", CRNS)
 
 
 

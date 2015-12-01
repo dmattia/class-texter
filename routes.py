@@ -1,6 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for, redirect
+from Get_Sorted_CRNs import is_Valid, Get_Crns
 from dbfunction import add_row
 import os
+
+sorted_crn_numbers, crn_dict = Get_Crns()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('TEXTING_SECRET_KEY','')
@@ -8,14 +11,20 @@ app.secret_key = os.environ.get('TEXTING_SECRET_KEY','')
 @app.route('/', methods=['GET','POST'])
 def hello_world():
 	if request.method == 'POST':
-		add_row(request.form)
-		return thank_you("+1" + request.form['phone_number'])
+		if not is_Valid(request.form["crn"], sorted_crn_numbers):
+			print "Invalid CRN" 
+			return render_template('home.html')
+			pass
+		else:
+			add_row(request.form)
+			url = url_for("thank_you", Num = request.form['phone_number'])
+			return redirect(url)
 	else:
 		return render_template('home.html')
 
-@app.route('/thanks/')
-def thank_you(number):
-	number = format_phone_number(number)
+@app.route('/thanks/<Num>')
+def thank_you(Num):
+	number = format_phone_number(Num)
 	return render_template('thanks.html', number=number)
 
 @app.route('/message/')
