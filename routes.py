@@ -1,21 +1,13 @@
 from flask import Flask, render_template, request
-import sqlite3 as lite
+from dbfunction import add_row
 
 app = Flask(__name__)
 
 @app.route('/', methods=['GET','POST'])
 def hello_world():
 	if request.method == 'POST':
-		crn = request.form['crn']
-		number = "+1" + request.form['phone_number']
-		verified = 0 # Defaults to false
-		data = [crn, number, verified]
-
-		conn = lite.connect('submissions.db')
-		c = conn.cursor()
-		c.executemany('INSERT INTO user_submission VALUES(?,?,?)',(data,))
-
-		return thank_you(number)
+		add_row(request.form)
+		return thank_you("+1" + request.form['phone_number'])
 	else:
 		return render_template('home.html')
 
