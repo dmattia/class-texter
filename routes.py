@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for, redirect
 from dbfunction import add_row
 from Get_Sorted_CRNs import is_Valid, Get_Crns
 
@@ -17,13 +17,14 @@ def hello_world():
 			pass
 		else:
 			add_row(request.form)
-			return thank_you("+1" + request.form['phone_number'])
+			url = url_for("thank_you", Num = request.form['phone_number'])
+			return redirect(url)
 	else:
 		return render_template('home.html')
 
-@app.route('/thanks/')
-def thank_you(number):
-	number = format_phone_number(number)
+@app.route('/thanks/<Num>')
+def thank_you(Num):
+	number = format_phone_number(Num)
 	return render_template('thanks.html', number=number)
 
 def format_phone_number(number):
