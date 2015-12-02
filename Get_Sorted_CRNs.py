@@ -2,9 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 from class_search_web_scrapping import  GetClasses, GetOptions
 
-def Write_Courses():
+def Get_Courses(subject):
 	Options = GetOptions()
-	subjects = Options[3].values()
+	subjects = subject
 	term = "201520"
 	ATTR = '0ANY'
 	Division = "UG"
@@ -23,16 +23,17 @@ def Write_Courses_iter():
 	Credit = "A"
 	for subject in subjects:
 		Courses = GetClasses(term, subject, Credit, ATTR, Division, Campus)
-		yield Courses
+		yield Courses, subject
 	
 def Get_CRN_List():
 	crn_list = []
-	with open('/home/flask/class_text/sorted_CRNs.txt', "r") as f:
+	with open('/home/flask/class_text/sorted_CRNs.txt', "r") as f:#open('/home/flask/class_text/sorted_CRNs.txt', "r") as f:
 		crn_list = f.read().split("\n")
-	while crn_list[-1] == "":
-		crn_list.pop()
-	return [int(i) for i in crn_list]
+		crn_list = [i for i in crn_list if i != ""]
+	return crn_list
 
+
+	
 # def Get_Crns():
 # 	Courses = Write_Courses_iter()
 # 	CRNs = {}
@@ -45,13 +46,16 @@ def Get_CRN_List():
 # 	return Sorted_Crns, CRNs
 
 
+
+
+
 def is_Valid(value, CRN_Numbers):
 	start = 0
 	end = len(CRN_Numbers) - 1
 	middle = (end) / 2
 
 	while start <= end:
-		middle_value = CRN_Numbers[middle]
+		middle_value = int(CRN_Numbers[middle].split(":")[0])
 		if middle_value > value:
 			end = middle - 1
 			middle = (start + end) / 2
@@ -61,3 +65,6 @@ def is_Valid(value, CRN_Numbers):
 		else:
 			return True
 	return False
+
+
+

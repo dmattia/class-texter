@@ -1,29 +1,48 @@
 from twilio.rest import TwilioRestClient
 from dbfunction import verify_number
-from Get_Sorted_CRNs import Write_Courses_iter
+from Get_Sorted_CRNs import Get_Courses
 from time import sleep
 import sqlite3 as lite
 import os
 
+
 def Check_for_openings():
-	conn = lite.connect('/home/flask/class_text/submissions.db')
+ 	conn = lite.connect('/home/flask/class_text/submissions.db')
+
+ 	with conn:
+ 		c = conn.cursor()
+ 		query = "Select * From user_submission Where verified = 1"
+ 		c.execute(query)
+ 		a = c.fetchall() 
+ 		if i is not None:
+ 			for query in a:
+ 				courses = Get_Courses(str(query[3]))
+ 				for course in courses:
+ 					if str(query[0]) == course["CRN"]:
+ 						if int(course["Opn"]) > 0:
+ 							Send_Text(str(query[1]), course)
+ 							new_query = "Delete from user_submission where crn = " + str(query[0]) + " and number = '" + str(query[1]) + "' and verified = " + str(query[2]) + " and  Department = '" + str(query[3]) + "'"
+ 							c.execute(new_query)
+
+# def Check_for_openings():
+# 	conn = lite.connect('/home/flask/class_text/submissions.db')
 	
-	courses_iter = Write_Courses_iter()
-	for i in courses_iter:
-		courses = i
-		with conn:
-			c = conn.cursor()
-			query = "Select * From user_submission Where verified = 1"
-			c.execute(query)
-			a = c.fetchall()
-			if a is not None:
-				for query in a:
-					for course in courses:
-						if str(query[0]) == course["CRN"]:
-							if int(course["Opn"]) > 0:
-								Send_Text(str(query[1]), course)
-								new_query = "Delete from user_submission where crn = " + str(query[0]) + " and number = '" + str(query[1]) + "' and verified = " + str(query[2])
-								c.execute(new_query)
+# 	courses_iter = Write_Courses_iter()
+# 	for i in courses_iter:
+# 		courses = i
+# 		with conn:
+# 			c = conn.cursor()
+# 			query = "Select * From user_submission Where verified = 1"
+# 			c.execute(query)
+# 			a = c.fetchall()
+# 			if a is not None:
+# 				for query in a:
+# 					for course in courses:
+# 						if str(query[0]) == course["CRN"]:
+# 							if int(course["Opn"]) > 0:
+# 								Send_Text(str(query[1]), course)
+# 								new_query = "Delete from user_submission where crn = " + str(query[0]) + " and number = '" + str(query[1]) + "' and verified = " + str(query[2])
+# 								c.execute(new_query)
 	
 def Send_Reply_verification(phone_number = None):
 	ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
