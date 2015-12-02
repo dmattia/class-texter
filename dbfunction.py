@@ -27,3 +27,10 @@ def verify_number(number):
 	with conn:
 		c = conn.cursor()
 		c.execute("UPDATE user_submission SET verified = 1 WHERE number = '%s'" % number)
+
+# Remove a number completely from the db
+def remove_number(number):
+	conn = lite.connect('/home/flask/class_text/submissions.db')
+	with conn:
+		c = conn.cursor()
+		c.execute("DELETE FROM user_submission WHERE number = '%s'" % number)
