@@ -13,6 +13,18 @@ def Write_Courses():
 	Courses = GetClasses(term, subjects, Credit, ATTR, Division, Campus)
 	return Courses
 
+def Write_Courses_iter():
+	Options = GetOptions()
+	subjects = Options[3].values()
+	term = "201520"
+	ATTR = '0ANY'
+	Division = "UG"
+	Campus = "M"
+	Credit = "A"
+	for subject in subjects:
+		Courses = GetClasses(term, subject, Credit, ATTR, Division, Campus)
+		yield Courses
+	
 def Get_CRN_List():
 	crn_list = []
 	with open('/home/flask/class_text/sorted_CRNs.txt', "r") as f:
@@ -20,7 +32,7 @@ def Get_CRN_List():
 	while crn_list[-1] == "":
 		crn_list.pop()
 	return [int(i) for i in crn_list]
-	
+
 def Get_Crns():
 	Courses = Write_Courses()
 	CRNs = {}

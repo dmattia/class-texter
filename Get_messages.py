@@ -69,8 +69,8 @@ def Check_For_Responses():
 	messages = client.messages.list()
 	for message in messages:
 		if message.from_ != TWILIO_NUMBER:
-			message = Send_Reply_verification(message.from_)
-			print message
+			Send_Reply_verification(message.from_)
+			client.messages.delete(message.sid)
 
 
 

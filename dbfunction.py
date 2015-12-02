@@ -22,11 +22,10 @@ def add_row(form):
 	return True
 
 def Check_for_openings():
-
-	courses = Write_Courses()
-	# for course in courses:
-	# 	if course["CRN"] == ""
 	conn = lite.connect('/home/flask/class_text/submissions.db')
+	
+	courses = Write_Courses()
+	
 	with conn:
 		c = conn.cursor()
 		query = "Select * From user_submission Where verified = 1"
