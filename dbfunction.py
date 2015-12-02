@@ -1,6 +1,4 @@
 import sqlite3 as lite
-from Get_Sorted_CRNs import Write_Courses
-from Get_messages import Send_Text
 
 # Adds a form submission to the database
 def add_row(form):
@@ -41,11 +39,9 @@ def Check_for_openings():
 						Send_Text(str(query[1]), course)
 						new_query = "Delete from user_submission where crn = " + str(query[0]) + " and number = '" + str(query[1]) + "' and verified = " + str(query[2])
 						c.execute(new_query)
-					else:
-		
+					
 
 
-Check_for_openings()
 # Update a phone number after an 'accept' reply
 def verify_number(number):
 	conn = lite.connect('/home/flask/class_text/submissions.db')
@@ -53,3 +49,9 @@ def verify_number(number):
 		c = conn.cursor()
 		c.execute("UPDATE user_submission SET verified = 1 WHERE number = '%s'" % number)
 
+# Remove a number completely from the db
+def remove_number(number):
+	conn = lite.connect('/home/flask/class_text/submissions.db')
+	with conn:
+		c = conn.cursor()
+		c.execute("DELETE FROM user_submission WHERE number = '%s'" % number)

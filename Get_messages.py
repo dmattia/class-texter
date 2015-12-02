@@ -1,4 +1,5 @@
 from twilio.rest import TwilioRestClient
+from time import sleep
 import os
 
 def Send_Reply_verification(phone_number = None):
@@ -8,14 +9,16 @@ def Send_Reply_verification(phone_number = None):
 
 	client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
 	
-	messages = client.messages.list(from_ = phone_number)
+	messages = client.messages.list(from_ = phone_number).reverse() # Reversed to respond to the earliest messages first
 
 	did_receive = False
 	for message in messages:
-		if message.body.lower() == "accept" or message.body.lower() == "accept " or message.body.lower() == " accept":
+		body = message.body.lower().strip()
+		if body == "accept":
 			verify_number(phone_number)
 		 	client.messages.create(to= phone_number, from_=TWILIO_NUMBER, body="Thank you for the reply, your number has been verified! We will send you a message if a spot opens up in your course")
-		elif message.body.lower() == "deny" or message.body.lower == "deny " or message.body.lower() == " deny":
+		elif body == "deny":
+			remove_number(phone_number)
 			client.messages.create(to= phone_number, from_=TWILIO_NUMBER, body="Thank you for the reply, your number has been disconnected. You will no longer receive messages unless you resign up!")
 		else:
 			client.messages.create(to= phone_number, from_=TWILIO_NUMBER, body="We cannot understand your response. Please reply 'yes' if you'd like to receive a text alert if a spot opens in your selected course, or 'stop' if you'd like to no longer receive messages")
@@ -66,7 +69,6 @@ def Check_For_Responses():
 			print message
 
 
-#Check_For_Responses()
 
 
 
