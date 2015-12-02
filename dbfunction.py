@@ -24,20 +24,21 @@ def add_row(form):
 def Check_for_openings():
 	conn = lite.connect('/home/flask/class_text/submissions.db')
 	
-	courses = Write_Courses()
-	
-	with conn:
-		c = conn.cursor()
-		query = "Select * From user_submission Where verified = 1"
-		c.execute(query)
-		a = c.fetchall()
-		for query in a:
-			for course in courses:
-				if str(query[0]) == course["CRN"]:
-					if int(course["Opn"]) > 0:
-						Send_Text(str(query[1]), course)
-						new_query = "Delete from user_submission where crn = " + str(query[0]) + " and number = '" + str(query[1]) + "' and verified = " + str(query[2])
-						c.execute(new_query)
+	courses_iter = Write_Courses_iter()
+	for i in courses_iter:
+		courses = i
+		with conn:
+			c = conn.cursor()
+			query = "Select * From user_submission Where verified = 1"
+			c.execute(query)
+			a = c.fetchall()
+			for query in a:
+				for course in courses:
+					if str(query[0]) == course["CRN"]:
+						if int(course["Opn"]) > 0:
+							Send_Text(str(query[1]), course)
+							new_query = "Delete from user_submission where crn = " + str(query[0]) + " and number = '" + str(query[1]) + "' and verified = " + str(query[2])
+							c.execute(new_query)
 					
 
 

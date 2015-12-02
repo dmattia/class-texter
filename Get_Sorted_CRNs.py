@@ -33,16 +33,16 @@ def Get_CRN_List():
 		crn_list.pop()
 	return [int(i) for i in crn_list]
 
-def Get_Crns():
-	Courses = Write_Courses()
-	CRNs = {}
-	Sorted_Crns = []
+# def Get_Crns():
+# 	Courses = Write_Courses_iter()
+# 	CRNs = {}
+# 	Sorted_Crns = []
 
-	for course in Courses:
-		CRNs[course["CRN"]] = course["Title"] + "|" + course["Course - Sec"] + "|" + course["CRN"] + "|" + course["Opn"]
+# 	for course in Courses:
+# 		CRNs[course["CRN"]] = course["Title"] + "|" + course["Course - Sec"] + "|" + course["CRN"] + "|" + course["Opn"]
 	
-	Sorted_Crns = sorted(CRNs.keys())
-	return Sorted_Crns, CRNs
+# 	Sorted_Crns = sorted(CRNs.keys())
+# 	return Sorted_Crns, CRNs
 
 
 def is_Valid(value, CRN_Numbers):
