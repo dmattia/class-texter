@@ -55,4 +55,3 @@ def format_phone_number(number):
 if __name__ == '__main__':
 	app.debug = True
 	app.run()
->>>>>>> 486f63362961b120f96622222923d61cfce118e1
