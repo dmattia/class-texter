@@ -13,6 +13,13 @@ def Write_Courses():
 	Courses = GetClasses(term, subjects, Credit, ATTR, Division, Campus)
 	return Courses
 
+def Get_CRN_List():
+	crn_list = []
+	with open("sorted_CRNs.txt", "r") as f:
+		crn_list = f.read().split("\n")
+	while crn_list[-1] == "":
+		crn_list.pop()
+	return crn_list
 
 def Get_Crns():
 	Courses = Write_Courses()
@@ -42,8 +49,6 @@ def is_Valid(value, CRN_Numbers):
 		else:
 			return True
 	return False
-
-
 
 
 
