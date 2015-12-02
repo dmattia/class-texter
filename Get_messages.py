@@ -1,6 +1,7 @@
 from twilio.rest import TwilioRestClient
-import os
+from dbfunction import verify_number
 from time import sleep
+import os
 
 def Send_Reply_verification(phone_number = None):
 	ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
@@ -14,6 +15,7 @@ def Send_Reply_verification(phone_number = None):
 	did_receive = False
 	for message in messages:
 		if message.body.lower() == "accept" or message.body.lower() == "accept " or message.body.lower() == " accept":
+			verify_number(phone_number)
 		 	client.messages.create(to= phone_number, from_=TWILIO_NUMBER, body="Thank you for the reply, your number has been verified! We will send you a message if a spot opens up in your course")
 		elif message.body.lower() == "deny" or message.body.lower == "deny " or message.body.lower() == " deny":
 			client.messages.create(to= phone_number, from_=TWILIO_NUMBER, body="Thank you for the reply, your number has been disconnected. You will no longer receive messages unless you resign up!")
@@ -44,20 +46,17 @@ def Send_Reply_Inquiry(phone_number = None):
 	
 
 def Check_For_Responses():
-	wait_time = 10 #seconds
 	ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
 	AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', '')
 	TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER', '')
 
 	client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
-	while True:
-		sleep(wait_time)
 
-		messages = client.messages.list()
-		for message in messages:
-			if message.from_ != TWILIO_NUMBER:
-				message = Send_Reply_verification(message.from_)
-				print message
+	messages = client.messages.list()
+	for message in messages:
+		if message.from_ != TWILIO_NUMBER:
+			message = Send_Reply_verification(message.from_)
+			print message
 
 
 #Check_For_Responses()

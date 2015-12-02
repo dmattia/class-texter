@@ -20,3 +20,10 @@ def add_row(form):
 		c.executemany('INSERT INTO user_submission VALUES(?,?,?)',(data,))
 
 	return True
+
+# Update a phone number after an 'accept' reply
+def verify_number(number):
+	conn = lite.connect('/home/flask/class_text/submissions.db')
+	with conn:
+		c = conn.cursor()
+		c.execute("UPDATE user_submission SET verified = 1 WHERE number = '%s'" % number)

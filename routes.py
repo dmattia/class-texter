@@ -4,7 +4,6 @@ from Get_Sorted_CRNs import is_Valid, Get_CRN_List
 from dbfunction import add_row
 import sqlite3
 import os
-sorted_crn_numbers = Get_CRN_List()
 
 DATABASE = '/home/flask/class_text/submissions.db'
 SECRET_KEY = os.environ.get('TEXTING_SECRET_KEY','')
@@ -27,6 +26,7 @@ def teardown_request(exception):
 @app.route('/', methods=['GET','POST'])
 def hello_world():
 	if request.method == 'POST':
+		sorted_crn_numbers = Get_CRN_List()
 		#if not is_Valid(request.form["crn"], sorted_crn_numbers):
 		if False:
 			print "Invalid CRN" 
@@ -54,4 +54,4 @@ def format_phone_number(number):
 
 if __name__ == '__main__':
 	app.debug = True
-	app.run()
+	app.run(host='0.0.0.0', port=5000)

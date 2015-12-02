@@ -15,7 +15,7 @@ def Write_Courses():
 
 def Get_CRN_List():
 	crn_list = []
-	with open("sorted_CRNs.txt", "r") as f:
+	with open("/home/flask/class_text/sorted_CRNs.txt", "r") as f:
 		crn_list = f.read().split("\n")
 	while crn_list[-1] == "":
 		crn_list.pop()
