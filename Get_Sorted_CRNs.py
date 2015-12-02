@@ -61,7 +61,3 @@ def is_Valid(value, CRN_Numbers):
 		else:
 			return True
 	return False
-
-
-
-
