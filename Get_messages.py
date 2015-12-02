@@ -1,6 +1,4 @@
 from twilio.rest import TwilioRestClient
-from dbfunction import verify_number
-from time import sleep
 import os
 
 def Send_Reply_verification(phone_number = None):
@@ -42,13 +40,22 @@ def Send_Reply_Inquiry(phone_number = None):
 		return "Success"
 	except:
 		return "Invalid phone Number"
+def Send_Text(phone_number, course):
+	ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
+	AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', '')
+	TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER', '')
 
-	
+
+	client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
+	try:
+		client.messages.create(to= phone_number, from_=TWILIO_NUMBER, body="Attenion!!!! " + course["Title"] + " ( "+ course["Course - Sec"] + " ) at " + course["When"] + " now has " + course["Opn"] + " openings! CRN = " + course["CRN"])
+	except:
+		print "Invalid phone Number"
 
 def Check_For_Responses():
 	ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
 	AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', '')
-	TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER', '')
+	TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER', '') 
 
 	client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
 

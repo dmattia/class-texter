@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, url_for, redirect, g
-from Get_messages  import Send_Reply_Inquiry
-from Get_Sorted_CRNs import is_Valid, Get_CRN_List
-from dbfunction import add_row
+from Get_messages  import *
+from Get_Sorted_CRNs import *
+from dbfunction import *
 import sqlite3
 import os
 
