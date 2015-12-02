@@ -1,4 +1,5 @@
 import sqlite3 as lite
+from Get_Sorted_CRNs import Write_Courses
 
 # Adds a form submission to the database
 def add_row(form):

@@ -27,7 +27,8 @@ def teardown_request(exception):
 def hello_world():
 	if request.method == 'POST':
 		sorted_crn_numbers = Get_CRN_List()
-		if not is_Valid(request.form["crn"], sorted_crn_numbers):
+		#if not is_Valid(request.form["crn"], sorted_crn_numbers):
+		if not is_Valid(int(request.form["crn"]), sorted_crn_numbers):
 			print "Invalid CRN" 
 			return render_template('message.html', message="Oops! We couldn't find this crn in our database. Double check your value is correct and try again.")
 		else:
@@ -47,6 +48,7 @@ def thank_you(Num):
 def message(message):
 	return render_template('message.html', message=message)
 
+# formats a phone number for pretty printing
 def format_phone_number(number):
 	str_num = str(number)
 	return str_num[:2] + '(' + str_num[2:5] + ')' + str_num[5:8] + '-' + str_num[8:]
