@@ -1,18 +1,34 @@
-from flask import Flask, render_template, request, url_for, redirect
-from dbfunction import add_row
-from Get_Sorted_CRNs import is_Valid, Get_CRN_List
+from flask import Flask, render_template, request, url_for, redirect, g
 from Get_messages  import Send_Reply_Inquiry
-
+from Get_Sorted_CRNs import is_Valid, Get_CRN_List
+from dbfunction import add_row
+import sqlite3
+import os
 sorted_crn_numbers = Get_CRN_List()
 
+DATABASE = '/home/flask/class_text/submissions.db'
+SECRET_KEY = os.environ.get('TEXTING_SECRET_KEY','')
 
 app = Flask(__name__)
+app.config.from_object(__name__)
 
+def connect_db():
+    return sqlite3.connect(DATABASE)
+
+@app.before_request
+def before_request():
+    g.db = connect_db()
+
+@app.teardown_request
+def teardown_request(exception):
+    if hasattr(g, 'db'):
+        g.db.close()
 
 @app.route('/', methods=['GET','POST'])
 def hello_world():
 	if request.method == 'POST':
-		if not is_Valid(request.form["crn"], sorted_crn_numbers):
+		#if not is_Valid(request.form["crn"], sorted_crn_numbers):
+		if False:
 			print "Invalid CRN" 
 			return render_template('home.html')
 		else:
@@ -25,14 +41,18 @@ def hello_world():
 
 @app.route('/thanks/<Num>')
 def thank_you(Num):
-	number = format_phone_number(Num)
+	number = format_phone_number("+1" + Num)
 	return render_template('thanks.html', number=number)
+
+@app.route('/message/')
+def message(message):
+	return render_template('message.html', message=message)
 
 def format_phone_number(number):
 	str_num = str(number)
 	return str_num[:2] + '(' + str_num[2:5] + ')' + str_num[5:8] + '-' + str_num[8:]
 
 if __name__ == '__main__':
-	app.run(debug=True, host='0.0.0.0', port=5000)
-
-
+	app.debug = True
+	app.run()
+>>>>>>> 486f63362961b120f96622222923d61cfce118e1

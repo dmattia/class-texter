@@ -12,7 +12,7 @@ def add_row(form):
 
 	# Connect to db
 	data = [crn, number, verified]
-	conn = lite.connect('submissions.db')
+	conn = lite.connect('/home/flask/class_text/submissions.db')
 	
 	# Add row to db
 	with conn:

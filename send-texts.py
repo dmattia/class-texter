@@ -4,7 +4,7 @@ from twilio.rest import TwilioRestClient
 import os
 
 
-def check_for_spots():
+
 crn = '24680'
 openSpots = 0
 courseName = 'Unamed Course'
