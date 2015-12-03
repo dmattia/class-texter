@@ -10,6 +10,7 @@ def Check_for_openings():
 	conn = lite.connect('/home/flask/class_text/submissions.db')
 	
 	with conn:
+		subject_memory = {}
 		c = conn.cursor()
 		query = "Select * From user_submission Where verified = 1"
 		c.execute(query)
@@ -19,7 +20,11 @@ def Check_for_openings():
 				crn = row[0]
 				number = row[1]
 				subject = row[3]
-				courses = GetClasses("201520", subject, "A", "0ANY", "UG", "M")
+				if subject not in subject_memory:
+					courses = GetClasses("201520", subject, "A", "0ANY", "UG", "M")
+					subject_memory[subject] = courses
+				else:
+					courses = subject_memory[subject]
 				for course in courses:
 					if course['CRN'] == str(crn):
 						if int(course['Opn']) > 0:
