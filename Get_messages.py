@@ -1,48 +1,31 @@
 from twilio.rest import TwilioRestClient
-from dbfunction import verify_number
-from Get_Sorted_CRNs import Get_Courses
+from dbfunction import verify_number, remove_number
+from Get_Sorted_CRNs import Write_Courses_iter
+from class_search_web_scrapping import GetClasses
 from time import sleep
 import sqlite3 as lite
 import os
 
-
 def Check_for_openings():
- 	conn = lite.connect('/home/flask/class_text/submissions.db')
-
- 	with conn:
- 		c = conn.cursor()
- 		query = "Select * From user_submission Where verified = 1"
- 		c.execute(query)
- 		a = c.fetchall() 
- 		if i is not None:
- 			for query in a:
- 				courses = Get_Courses(str(query[3]))
- 				for course in courses:
- 					if str(query[0]) == course["CRN"]:
- 						if int(course["Opn"]) > 0:
- 							Send_Text(str(query[1]), course)
- 							new_query = "Delete from user_submission where crn = " + str(query[0]) + " and number = '" + str(query[1]) + "' and verified = " + str(query[2]) + " and  Department = '" + str(query[3]) + "'"
- 							c.execute(new_query)
-
-# def Check_for_openings():
-# 	conn = lite.connect('/home/flask/class_text/submissions.db')
+	conn = lite.connect('/home/flask/class_text/submissions.db')
 	
-# 	courses_iter = Write_Courses_iter()
-# 	for i in courses_iter:
-# 		courses = i
-# 		with conn:
-# 			c = conn.cursor()
-# 			query = "Select * From user_submission Where verified = 1"
-# 			c.execute(query)
-# 			a = c.fetchall()
-# 			if a is not None:
-# 				for query in a:
-# 					for course in courses:
-# 						if str(query[0]) == course["CRN"]:
-# 							if int(course["Opn"]) > 0:
-# 								Send_Text(str(query[1]), course)
-# 								new_query = "Delete from user_submission where crn = " + str(query[0]) + " and number = '" + str(query[1]) + "' and verified = " + str(query[2])
-# 								c.execute(new_query)
+	with conn:
+		c = conn.cursor()
+		query = "Select * From user_submission Where verified = 1"
+		c.execute(query)
+		a = c.fetchall()
+		if a is not None:
+			for row in a:
+				crn = row[0]
+				number = row[1]
+				subject = row[3]
+				courses = GetClasses("201520", subject, "A", "0ANY", "UG", "M")
+				for course in courses:
+					if course['CRN'] == str(crn):
+						if int(course['Opn']) > 0:
+							Send_Text(number, course)
+							new_query = "Delete from user_submission where crn = " + str(crn) + " and number = '" + str(number) + "' and verified = " + str(row[2])
+							c.execute(new_query)
 	
 def Send_Reply_verification(phone_number = None):
 	ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
@@ -68,7 +51,7 @@ def Send_Reply_verification(phone_number = None):
 				did_receive = True
 				#client.messages.delete(message.sid)
 			else:
-				client.messages.create(to= phone_number, from_=TWILIO_NUMBER, body="We cannot understand your response. Please reply 'yes' if you'd like to receive a text alert if a spot opens in your selected course, or 'stop' if you'd like to no longer receive messages")
+				client.messages.create(to= phone_number, from_=TWILIO_NUMBER, body="We cannot understand your response. Please reply 'accept' if you'd like to receive a text alert if a spot opens in your selected course, or 'deny' if you'd like to no longer receive messages")
 			
 			message_text = message.body.lower()
 			did_receive = True
@@ -99,7 +82,7 @@ def Send_Text(phone_number, course):
 
 	client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
 	try:
-		client.messages.create(to= phone_number, from_=TWILIO_NUMBER, body="Attenion!!!! " + course["Title"] + " ( "+ course["Course - Sec"] + " ) at " + course["When"] + " now has " + course["Opn"] + " openings! CRN = " + course["CRN"])
+		client.messages.create(to= phone_number, from_=TWILIO_NUMBER, body="Attention!!!! " + course["Title"] + " ( "+ course["Course - Sec"] + " ) at " + course["When"] + " now has " + course["Opn"] + " openings! CRN = " + course["CRN"])
 	except:
 		print "Invalid phone Number"
 

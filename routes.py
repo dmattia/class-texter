@@ -27,12 +27,13 @@ def teardown_request(exception):
 def hello_world():
 	if request.method == 'POST':
 		sorted_crn_numbers = Get_CRN_List()
-		#if not is_Valid(request.form["crn"], sorted_crn_numbers):
-		if not is_Valid(int(request.form["crn"]), sorted_crn_numbers):
+		#if not is_Valid(int(request.form["crn"]), sorted_crn_numbers):
+		subject = is_Valid(int(request.form["crn"]), sorted_crn_numbers)
+		if not subject:
 			print "Invalid CRN" 
 			return render_template('message.html', message="Oops! We couldn't find this crn in our database. Double check your value is correct and try again.")
 		else:
-			add_row(request.form)
+			add_row(request.form, subject)
 			Message = Send_Reply_Inquiry('+1' + request.form["phone_number"])
 			url = url_for("thank_you", Num = request.form['phone_number'])
 			return redirect(url)
