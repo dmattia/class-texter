@@ -9,7 +9,7 @@ def add_row(form):
 	crn = form['crn']
 	number = "+1" + form['phone_number']
 	verified = 0
-
+	
 	# Connect to db
 	data = [crn, number, verified]
 	conn = lite.connect('/home/flask/class_text/submissions.db')

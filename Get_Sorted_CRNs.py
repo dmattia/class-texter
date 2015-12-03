@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-from class_search_web_scrapping import  GetClasses, GetOptions
-
+from class_search_web_scrapping import  GetOptions, GetClasses
+import time
 def Get_Courses(subject):
 	Options = GetOptions()
 	subjects = subject
@@ -65,6 +65,4 @@ def is_Valid(value, CRN_Numbers):
 		else:
 			return True
 	return False
-
-
 
