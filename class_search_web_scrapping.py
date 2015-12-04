@@ -52,6 +52,14 @@ def GetOptions():
             del OptionCategories[0][entry]
     return OptionCategories
 
+def GetClassesHashed(term, subj, credit, Attr, divs, campus):
+    classList = GetClasses(term, subj, credit, Attr, divs, campus)
+    hashed = {}
+    for course in classList:
+        crn = course['CRN']
+        hashed[crn] = course
+    return hashed
+
 def GetClasses(term, subj, credit, Attr, divs, campus):
     """
     Given the inputs, function will find the class data from class-search.nd.edu.
