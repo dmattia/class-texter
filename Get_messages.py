@@ -1,7 +1,7 @@
 from twilio.rest import TwilioRestClient
 from dbfunction import verify_number, remove_number
 from Get_Sorted_CRNs import Write_Courses_iter
-from class_search_web_scrapping import GetClasses
+from class_search_web_scrapping import GetClassesHashed
 from time import sleep
 import sqlite3 as lite
 import os
@@ -15,23 +15,26 @@ def Check_for_openings():
 		query = "Select * From user_submission Where verified = 1"
 		c.execute(query)
 		a = c.fetchall()
+		Departments = []
+
+		if a is not None:
+			for row in a:
+				Departments.append(row[3])
+		Departments = set(Departments)
+		courses = GetClassesHashed("201520", Departments, "A", "0ANY", "UG", "M")
+
 		if a is not None:
 			for row in a:
 				crn = row[0]
 				number = row[1]
 				subject = row[3]
-				if subject not in subject_memory:
-					courses = GetClasses("201520", subject, "A", "0ANY", "UG", "M")
-					subject_memory[subject] = courses
-				else:
-					courses = subject_memory[subject]
-				for course in courses:
-					if course['CRN'] == str(crn):
-						if int(course['Opn']) > 0:
-							Send_Text(number, course)
-							new_query = "Delete from user_submission where crn = " + str(crn) + " and number = '" + str(number) + "' and verified = " + str(row[2])
-							c.execute(new_query)
-	
+				course = courses[str(crn)]
+				if int(course['Opn']) > 0:
+					Send_Text(number, course)
+					new_query = "Delete from user_submission where crn = " + str(crn) + " and number = '" + str(number) + "' and verified = " + str(row[2])
+					c.execute(new_query)
+
+
 def Send_Reply_verification(phone_number = None):
 	ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
 	AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', '')
