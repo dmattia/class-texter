@@ -19,8 +19,9 @@ def Check_for_openings():
 
 		if a is not None:
 			for row in a:
-				Departments.append(row[3])
-		Departments = set(Departments)
+				subject = row[3]
+				if subject not in Departments:
+					Departments.append(subject)
 		courses = GetClassesHashed("201520", Departments, "A", "0ANY", "UG", "M")
 
 		if a is not None:
