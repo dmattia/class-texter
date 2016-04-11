@@ -9,7 +9,7 @@ def CleanUpString(string):
     return string.replace('\t', '').replace('\r','').replace('\n', '').replace('  ', '')
 
 def GetCurrentSemester():
-    return "201520"
+    return "201610"
     
 def GetOptions():
     """Gets the options for the 6 categories (Term, Division, Campus, Subject, Attribute, and Credits)..

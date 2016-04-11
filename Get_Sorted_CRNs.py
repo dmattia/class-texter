@@ -7,24 +7,18 @@ import time
 def Write_Courses():
 	Options = GetOptions()
 	subjects = Options[3].values()
-	term = "201520"
+	term = "201610"
 	ATTR = '0ANY'
 	Division = "UG"
 	Campus = "M"
 	Credit = "A"
 	Courses = GetClasses(term, subjects, Credit, ATTR, Division, Campus)
-	'''
-	for subject in subjects:
-		Courses = GetClasses(term, subject, Credit, ATTR, Division, Campus)
-		for course in Courses:
-			print course['CRN'] + " " + subject
-	'''
 	return Courses
 
 def Write_Courses_iter():
 	Options = GetOptions()
 	subjects = Options[3].values()
-	term = "201520"
+	term = "201610"
 	ATTR = '0ANY'
 	Division = "UG"
 	Campus = "M"

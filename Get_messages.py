@@ -22,17 +22,21 @@ def Check_for_openings():
 				subject = row[3]
 				if subject not in Departments:
 					Departments.append(subject)
-		courses = GetClassesHashed("201520", Departments, "A", "0ANY", "UG", "M")
+		courses = GetClassesHashed("201610", Departments, "A", "0ANY", "UG", "M")
 
 		if a is not None:
 			for row in a:
 				crn = row[0]
 				number = row[1]
 				subject = row[3]
-				course = courses[str(crn)]
-				if int(course['Opn']) > 0:
-					Send_Text(number, course)
-					new_query = "Delete from user_submission where crn = " + str(crn) + " and number = '" + str(number) + "' and verified = " + str(row[2])
+                                try:
+					course = courses[str(crn)]
+					if int(course['Opn']) > 0:
+						Send_Text(number, course)
+						new_query = "Delete from user_submission where crn = " + str(crn) + " and number = '" + str(number) + "' and verified = " + str(row[2])
+						c.execute(new_query)
+                                except KeyError:
+					new_query = "Delete from user_submission where crn = " + str(crn)
 					c.execute(new_query)
 
 
@@ -64,7 +68,10 @@ def Send_Reply_verification(phone_number = None):
 			
 			message_text = message.body.lower()
 			did_receive = True
-			client.messages.delete(message.sid)
+                        try:
+			    client.messages.delete(message.sid)
+                        except:
+                            pass
 	if did_receive:
 		return message_text
 	else:
@@ -105,11 +112,9 @@ def Check_For_Responses():
 
 	messages = client.messages.list()
 	for message in messages:
-		if message.from_ != TWILIO_NUMBER:
+            if message.to != "+15743180123" and message.from_ != "+15743180123":
+		if message.from_ != TWILIO_NUMBER and message.direction == 'inbound':
+                        print("Sending message")
 			Send_Reply_verification(message.from_)
 			#client.messages.delete(message.sid)
-
-
-
-
 
