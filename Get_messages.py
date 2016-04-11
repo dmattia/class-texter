@@ -99,7 +99,7 @@ def Send_Text(phone_number, course):
 	client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
 	try:
 		client.messages.create(to= phone_number, from_=TWILIO_NUMBER, body="Attention!!!! " + course["Title"] + " ( "+ course["Course - Sec"] + " ) at " + course["When"] + " now has " + course["Opn"] + " openings! CRN = " + course["CRN"])
-		client.messages.create(to= phone_number, from_=TWILIO_NUMBER, body="There may have been others watching this class. If it fills up again before you can sign up, you will need to re-signmup for watching this class at www.ndclassalert.com")
+		client.messages.create(to= phone_number, from_=TWILIO_NUMBER, body="There may have been others watching this class. If it fills up again before you can sign up, you will need to re-sign up for watching this class at www.ndclassalert.com")
 	except:
 		print "Invalid phone Number"
 
